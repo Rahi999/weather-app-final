@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+#box{
+            height: 270px;
+            width: 200px;
+            background-color: #333;
+            color: white;
+            border-radius: 10px;
+            border:  1px solid grey;
+            
+        }
+        #container1{
+            margin-top: 30px;
+            background-color: #333;
+            display: grid;
+            grid-template-columns: repeat(6,1fr);
+        }
+        h3{
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: -5px;
+            text-align: center;
+        }
+        #container{
+            
+            width:  200px;
+            border-radius: 10px;
+            text-align: center;
+            background-color:  #333;
+            color:  white;
+            box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+        }
+        img{
+            margin-left: 35%;
+        }
+        h4,p{
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: -5px;
+            text-align: center;
+        }
+        h2{
+            font-family: 'Poppins', sans-serif;
+        }
+        #home{
+            height: 100px;
+            width: 100%;
+            background-color: maroon;
+            border-radius: 10px;
+            margin: auto;
+        }
+       h1{
+           text-align: center;
+           font-family: 'Poppins', sans-serif;
+       }
+       .own{
+           height: 30px;
+           margin-left: 500px;
+           border-radius: 10px;
+           font-size: 20px;
+           font-family: 'Poppins', sans-serif;
+
+       }
+       .other{
+           height: 30px; 
+           border-radius: 10px;
+           font-size: 20px;
+           font-family: 'Poppins', sans-serif;
+       }
+       input{
+           height: 30px;
+           border-radius: 8px;
+           margin-left: 500px;
+          
+           
+       }
+      
+    </style>
+</head>
+<body>
+     <h1>Check weather Report</h1>
+     <div id="home">
+
+         <button class="own" onclick="getWeather()">Check Weather At your Location</button><br><br>
+         <input type="text" name="" id="city" placeholder="Enter City Name">
+         <button class="other" onclick="getData()" id="submit">Check Weather</button>
+
+     </div>
+
+ 
+ <div id="div"></div>
+ <div id="pbox">
+     <h2 id="today"></h2>
+    <div id="container">
+        
+    </div>
+    
+ </div>
+
+ <h2 id="next"></h2>
+    <div id="container1"></div>
+ <h2 id="map"></h2>
+
+ 
+
+
+
+
+
+ 
+
+   
+
+ <div class="mapouter"><div class="gmap_canvas">
+     <iframe
+        width="600"
+        height="500"
+        id="gmap_canvas"
+        frameborder="0"
+        scrolling="no"
+        marginheight="0"
+        marginwidth="0">
+     </iframe>
+             <a href="https://fmovies-online.net"></a><br>
+            <style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}</style>
+            <a href="https://www.embedgooglemap.net"></a>
+            <style>.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:1300px;}</style>
+        </div>
+    </div> 
+
+
+
+
+
+</body>
+</html>
+<script>
+
+ // src="https://maps.google.com/maps?q=2880%20Broadway,%20New%20York&t=&z=13&ie=UTF8&iwloc=&output=embed"
+ // https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
+
+ // https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
+
+
+
+
+
+    function getData()
+     {
+
+        let city = document.querySelector("#city").value;
+        
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=0d9523c0cddd9c1285bd846ff9ec829d`
+       
+        fetch(url)
+        .then(function (res) {
+            return res.json()
+        })
+        .then(function (res) {
+            
+            append(res)
+        })
+        .catch(function(err) {
+            console.log("err",err)
+        })
+
+
+       
+      const url1 = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=0d9523c0cddd9c1285bd846ff9ec829d`
+
+      fetch(url1) 
+      .then(function (res) {
+          return res.json()
+      })
+      .then(function (res) {
+           console.log(res)
+
+           document.querySelector("#today").innerText=`Today's Weather in ${res.city.name}:`;
+           document.querySelector("#next").innerText=`Next 7 Days's Weather in ${res.city.name}:`;
+           document.querySelector("#map").innerText=`MAP For ${res.city.name} :`
+           
+          append1(res.list[0])
+          append1(res.list[8])
+          append1(res.list[16])
+          append1(res.list[24])
+          append1(res.list[32])
+          append1(res.list[39])
+          
+         
+      })
+      .catch(function (err) {
+       let input = document.querySelector("#city");
+       alert("It's Not a City Please Enter Valid City Name")
+      })
+
+
+    }
+
+
+    function append(data)
+
+   {
+
+
+      let container = document.querySelector("#container");
+      let map = document.getElementById("gmap_canvas")
+
+      container.innerHTML = null ;
+      
+      let city = document.createElement("p");
+       city.innerText= `City : ${data.name}`;
+
+       let current = document.createElement("h4");
+       let min = document.createElement("h4");
+       let max = document.createElement("h4");
+      
+       let cur = Math.ceil(data.main.temp/9.85645161290322580645161);
+       let minc = Math.ceil(data.main.temp_min/9.85645161290322580645161);
+       let maxc = Math.ceil(data.main.temp_max/9.85645161290322580645161);
+
+       current.innerText= `Current: ${cur}°C`;
+       min.innerText= `Sunrise: ${minc}°C`;
+       max.innerText= `Sunset: ${maxc}°C`
+
+       let humidity = document.createElement("p");
+       humidity.innerText= `Humidity : ${data.main.humidity} `;
+
+
+       container.append(city,min,max,current,humidity)
+        map.src =`https://maps.google.com/maps?q=${data.name}&t=&z=13&ie=UTF8&iwloc=&output=embed`
+
+
+
+    }
+
+
+    function getDataLocation(lat, lon)
+     {
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=0d9523c0cddd9c1285bd846ff9ec829d`
+       
+        fetch(url)
+        .then(function (res) {
+            return res.json()
+        })
+        .then(function (res) {
+            
+            append(res)
+        })
+        .catch(function(err) {
+            console.log("err",err)
+        })
+
+    }
+   
+    function getWeather () 
+    {
+            navigator.geolocation.getCurrentPosition(success);
+
+            function success(position) {
+
+                var crd = position.coords;
+
+                    console.log('Your current position is:');
+                    console.log(`Latitude : ${crd.latitude}`);
+                    console.log(`Longitude: ${crd.longitude}`);
+                    console.log(`More or less ${crd.accuracy} meters.`);
+                    getDataLocation(crd.latitude, crd.longitude)
+           
+                }
+
+            
+  
+    }
+   
+
+   
+//     function getData1() 
+//  {
+//      let city = document.querySelector("#city").value;
+//       const url = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=0d9523c0cddd9c1285bd846ff9ec829d`
+
+//       fetch(url) 
+//       .then(function (res) {
+//           return res.json()
+//       })
+//       .then(function (res) {
+//            console.log(res.city.name)
+           
+//           append1(res.list[0])
+//           append1(res.list[8])
+//           append1(res.list[16])
+//           append1(res.list[24])
+//           append1(res.list[32])
+//           append1(res.list[39])
+          
+         
+//       })
+//       .catch(function (err) {
+//        let input = document.querySelector("#city");
+//        alert("It's Not a City Please Enter Valid City Name")
+//       })
+
+//  }
+
+
+
+ function append1(data) 
+ 
+ {
+     
+  
+    let container1 = document.querySelector("#container1");
+    
+
+    let div = document.createElement("div");
+    div.setAttribute("id","box")
+
+    
+    let date = document.createElement("h3");
+    let current = document.createElement("h3");
+    let min = document.createElement("h3");
+    let max = document.createElement("h3");
+    let img = document.createElement("img");
+    
+    let cur = Math.ceil(data.main.temp/9.85645161290322580645161);
+    let minc = Math.ceil(data.main.temp_min/9.85645161290322580645161);
+    let maxc = Math.ceil(data.main.temp_max/9.85645161290322580645161);
+    
+
+
+    date.innerText= `Date: ${data.dt_txt}`;
+    current.innerText= `Current: ${cur}°C`;
+    min.innerText= `Sunrise: ${minc}°C`;
+    max.innerText= `Sunset: ${maxc}°C`
+    img.src="https://ssl.gstatic.com/onebox/weather/48/partly_cloudy.png"
+   
+
+
+
+    div.append(date,img,current,min,max)
+    container1.append(div)
+    
+ }
+
+
+</script>
